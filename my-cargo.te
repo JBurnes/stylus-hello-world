@@ -1,0 +1,22 @@
+
+module my-cargo 1.0;
+
+require {
+	type user_home_t;
+	type container_t;
+	type container_runtime_t;
+	type unconfined_t;
+	class file { create execute execute_no_trans link lock open read setattr write };
+	class dir { add_name create remove_name rename write };
+	class process2 nnp_transition;
+}
+
+#============= container_t ==============
+allow container_t user_home_t:dir { add_name create remove_name rename write };
+
+#!!!! This avc is allowed in the current policy
+allow container_t user_home_t:file read;
+allow container_t user_home_t:file { create execute execute_no_trans link lock open setattr write };
+
+#============= unconfined_t ==============
+allow unconfined_t container_runtime_t:process2 nnp_transition;
